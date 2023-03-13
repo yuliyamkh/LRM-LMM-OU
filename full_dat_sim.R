@@ -33,10 +33,6 @@ xdat$int <- 0.460
 area_ints <- rnorm(10, sd = 8)
 xdat$area_ints <- rep(area_ints, each = 20)
 
-# Generate varying intercepts for languages
-lang_ints <- rnorm(20, sd = 2)
-xdat$lang_ints <- rep(lang_ints, 10)
-
 # Add error
 xdat$error <- rnorm(200, sd = 10)
 
