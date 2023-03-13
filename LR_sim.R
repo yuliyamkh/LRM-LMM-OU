@@ -1,3 +1,4 @@
+library(purrr)
 library(broom)
 library(dplyr)
 library(ggplot2)
@@ -44,4 +45,37 @@ sims <- replicate(1000, sim_LR(), simplify = FALSE)
 
 # First three models
 sims[c(1, 2, 3)]
+
+# What does the distribution of differences in mean response
+# between data points look like?
+
+# filter(map_df(sims[c(1, 2, 3)], tidy), term == 'predictor')
+sims %>% 
+  map_df(tidy) %>%
+  filter(term == 'predictor') %>%
+  ggplot(aes(x = estimate)) +
+  geom_density(fill = 'blue', alpha = .5) +
+  geom_vline(xintercept = b1, colour = 'red', linetype = 'dashed', size = 1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
