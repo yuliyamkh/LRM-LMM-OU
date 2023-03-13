@@ -13,7 +13,7 @@ for (i in 1:10) {
 
 # Group members (e.g., languages) by area
 n_lang <- rep(areas, each = 20)
-n_lang <- as.factor(n_members)
+n_lang <- as.factor(n_lang)
 levels(n_lang)
 
 # Define predictor

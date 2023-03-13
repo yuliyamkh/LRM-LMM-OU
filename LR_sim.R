@@ -87,6 +87,7 @@ tidy(LRM_sim)
 # Fit the LMM on the data set simulated
 library(lme4)
 LMM_sim <- lmer(response ~ x1 + (1|area), data = data_sim)
+summary(LMM_sim)
 summary(LMM_sim)$coefficients
 
 # Here, for instance, area 8 would have
