@@ -3,16 +3,16 @@ library(broom)
 library(dplyr)
 library(ggplot2)
 
-set.seed(123)
+set.seed(157)
 
 # a single simulation (Linear Regression)
 
-n_languages <- 150
+n_languages <- 1500
 
 predictor <- seq(0.3, 4.2, len=n_languages)
 
-b0 <- 0.18
-b1 <- 2
+b0 <- 0.8
+b1 <- 5
 sd <- 2
 error <- rnorm(n_languages, mean = 0, sd = sd)
 
@@ -24,8 +24,8 @@ model_fit <- lm(response ~ predictor, data = dat)
 summary(model_fit)
 
 # Function for the data simulating and model fitting process
-sim_LR <- function(n = 150, from_n = 0.3, 
-                   to_n = 4.2, b0 = 0.18, b1 = 2, sigma = 2) {
+sim_LR <- function(n = 1500, from_n = 0.3, 
+                   to_n = 4.2, b0 = 0.8, b1 = 5, sigma = 2) {
   predictor <- seq(from_n, to_n, len = n)
   error <- rnorm(n, mean = 0, sd = sigma)
   response <- b0 + b1*predictor + error
@@ -35,13 +35,13 @@ sim_LR <- function(n = 150, from_n = 0.3,
 }
 
 # Test
-set.seed(123)
+set.seed(157)
 sim_LR()
 
-# Run the simulation many times (here, 1000)
+# Run the simulation many times (here, 3000)
 # Result: a list of fitted LR models based on data simulated
 # from the parameters I have set
-sims <- replicate(1000, sim_LR(), simplify = FALSE)
+sims <- replicate(3000, sim_LR(), simplify = FALSE)
 
 # First three models
 sims[c(1, 2, 3)]
@@ -57,25 +57,21 @@ sims %>%
   geom_density(fill = 'blue', alpha = .5) +
   geom_vline(xintercept = b1, colour = 'red', linetype = 'dashed', size = 1)
 
+# Extract hypothesis test results
 
+# H_null = there is no statistically significant relationship
+# between response and predictor; H_alternative = there is a
+# statistically significant relationship between response and predictor
 
+# Type I error rate: Reject H_null when it is actually true
+# Type II error rate: Do not reject H_null when it is actually false
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# Here, I give the proportion of models that correctly rejected
+# the null hypothesis, given that I know the null hypothesis is not true.
+# That's an estimate of the statistical power.
+sims %>%
+  map_df(tidy) %>%
+  filter(term == 'predictor') %>%
+  pull(p.value) %>%
+  {. < 0.01} %>%
+  mean() # 1
