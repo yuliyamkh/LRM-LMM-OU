@@ -75,3 +75,22 @@ sims %>%
   pull(p.value) %>%
   {. < 0.01} %>%
   mean() # 1
+
+# Fit the LRM on the data set simulated
+data_sim <- read.csv("data_sim.csv")
+head(data_sim)
+
+LRM_sim <- lm(response ~ x1, data = data_sim)
+summary(LRM_sim)
+tidy(LRM_sim)
+
+# Fit the LMM on the data set simulated
+library(lme4)
+LMM_sim <- lmer(response ~ x1 + (1|area), data = data_sim)
+summary(LMM_sim)$coefficients
+
+# Here, for instance, area 8 would have
+# the smalles value for the response variable
+coef(LMM_sim)$area 
+
+
